@@ -18,10 +18,9 @@ def call(String status) {
 
     // 🔥 CRITICAL FIX (this was missing in your case)
     slackSend(
-        channel: '#praveen-project',
-        color: color,
-        message: message,
-        teamDomain: 'devops-wells',          // your Slack workspace
-        tokenCredentialId: 'slack-token'     // Jenkins credentiaslack-tokenl ID
-    )
+    channel: '#praveen-project',
+    message: "Test",
+    teamDomain: 'devops-wells',
+    tokenCredentialId: 'slack-token'
+)
 }
