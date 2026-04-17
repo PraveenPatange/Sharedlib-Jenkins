@@ -1,24 +1,27 @@
-def call(String status) {
+   def call(String buildStatus = 'STARTED') {
+  // build status of null means successful
+  //This is the condition which we are checking weather buildStatus is SUCCESSFULL or not.
+ //This line updated to show the Eclipse with GitHub demo
+  buildStatus =  buildStatus ?: 'SUCCESS'
 
-    def color = ''
-    def message = ''
+  // Default values
+  def colorName = 'RED'
+  def colorCode = '#FF0000'
+  def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
+  def summary = "${subject} (${env.BUILD_URL})"
 
-    if (status == 'STARTED') {
-        color = 'warning'
-        message = "⚠️ STARTED: ${env.JOB_NAME} #${env.BUILD_NUMBER}\n${env.BUILD_URL}"
-    }
-    else if (status == 'SUCCESS') {
-        color = 'good'
-        message = "✅ SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}\n${env.BUILD_URL}"
-    }
-    else if (status == 'FAILED') {
-        color = 'danger'
-        message = "❌ FAILED: ${env.JOB_NAME} #${env.BUILD_NUMBER}\n${env.BUILD_URL}"
-    }
+  // Override default values based on build status
+  if (buildStatus == 'STARTED') {
+    colorName = 'YELLOW'
+    colorCode = '#FFFF00'
+  } else if (buildStatus == 'SUCCESS') {
+    colorName = 'GREEN'
+    colorCode = '#00FF00'
+  } else {
+    colorName = 'RED'
+    colorCode = '#FF0000'
+  }
 
-    slackSend(
-        channel: '#praveen-project',
-        color: color,
-        message: message
-    )
+  // Calling the slackSend function to Send notifications. KK FUNDA
+  slackSend (color: colorCode, message: summary)
 }
