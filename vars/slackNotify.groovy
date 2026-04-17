@@ -1,7 +1,10 @@
-def call(String status) {
+def call(String status = 'STARTED') {
 
     def color = ''
     def message = ''
+
+    // Default fallback
+    status = status ?: 'SUCCESS'
 
     if (status == 'STARTED') {
         color = 'warning'
@@ -11,16 +14,17 @@ def call(String status) {
         color = 'good'
         message = "✅ SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}\n${env.BUILD_URL}"
     }
-    else if (status == 'FAILED') {
+    else {
         color = 'danger'
         message = "❌ FAILED: ${env.JOB_NAME} #${env.BUILD_NUMBER}\n${env.BUILD_URL}"
     }
 
-    // 🔥 CRITICAL FIX (this was missing in your case)
+    // ✅ Correct Slack call
     slackSend(
-    channel: '#praveen-project',
-    message: "Test",
-    teamDomain: 'devops-wells',
-    tokenCredentialId: 'slack-token'
-)
+        channel: '#praveen-project',
+        color: color,
+        message: message,
+        teamDomain: 'devops-wells',          // your Slack workspace
+        tokenCredentialId: 'slack-token'     // Jenkins credential ID
+    )
 }
