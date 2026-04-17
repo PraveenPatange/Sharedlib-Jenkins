@@ -1,27 +1,28 @@
-   def call(String buildStatus = 'STARTED') {
-  // build status of null means successful
-  //This is the condition which we are checking weather buildStatus is SUCCESSFULL or not.
- //This line updated to show the Eclipse with GitHub demo
-  buildStatus =  buildStatus ?: 'SUCCESS'
+def call(String buildStatus = 'STARTED') {
 
-  // Default values
-  def colorName = 'RED'
-  def colorCode = '#FF0000'
-  def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
-  def summary = "${subject} (${env.BUILD_URL})"
+    // If null, treat as SUCCESS
+    buildStatus = buildStatus ?: 'SUCCESS'
 
-  // Override default values based on build status
-  if (buildStatus == 'STARTED') {
-    colorName = 'YELLOW'
-    colorCode = '#FFFF00'
-  } else if (buildStatus == 'SUCCESS') {
-    colorName = 'GREEN'
-    colorCode = '#00FF00'
-  } else {
-    colorName = 'RED'
-    colorCode = '#FF0000'
-  }
+    // Default values
+    def colorCode = '#FF0000'  // RED
+    def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
+    def summary = "${subject} (${env.BUILD_URL})"
 
-  // Calling the slackSend function to Send notifications. KK FUNDA
-  slackSend (color: colorCode, message: summary)
+    // Set color based on status
+    if (buildStatus == 'STARTED') {
+        colorCode = '#FFFF00'  // YELLOW
+    } else if (buildStatus == 'SUCCESS') {
+        colorCode = '#00FF00'  // GREEN
+    } else {
+        colorCode = '#FF0000'  // RED
+    }
+
+    // ✅ FIX: Add Slack credentials here
+    slackSend(
+        channel: '#praveen-project',
+        color: colorCode,
+        message: summary,
+        teamDomain: 'devops-wells',          // your Slack workspace
+        tokenCredentialId: 'slack-cred'     // Jenkins credential ID
+    )
 }
