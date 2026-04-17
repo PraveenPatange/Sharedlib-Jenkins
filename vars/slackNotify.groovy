@@ -1,27 +1,26 @@
-def call(String buildStatus = 'STARTED') {
+def call(String status) {
 
-    // If null, treat as SUCCESS
-    buildStatus = buildStatus ?: 'SUCCESS'
+    def color = ''
+    def message = ''
 
-    // Default values
-    def colorCode = '#FF0000'  // RED
-    def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
-    def summary = "${subject} (${env.BUILD_URL})"
-
-    // Set color based on status
-    if (buildStatus == 'STARTED') {
-        colorCode = '#FFFF00'  // YELLOW
-    } else if (buildStatus == 'SUCCESS') {
-        colorCode = '#00FF00'  // GREEN
-    } else {
-        colorCode = '#FF0000'  // RED
+    if (status == 'STARTED') {
+        color = 'warning'
+        message = "⚠️ STARTED: ${env.JOB_NAME} #${env.BUILD_NUMBER}\n${env.BUILD_URL}"
+    }
+    else if (status == 'SUCCESS') {
+        color = 'good'
+        message = "✅ SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}\n${env.BUILD_URL}"
+    }
+    else if (status == 'FAILED') {
+        color = 'danger'
+        message = "❌ FAILED: ${env.JOB_NAME} #${env.BUILD_NUMBER}\n${env.BUILD_URL}"
     }
 
-    // ✅ FIX: Add Slack credentials here
+    // 🔥 CRITICAL FIX (this was missing in your case)
     slackSend(
         channel: '#praveen-project',
-        color: colorCode,
-        message: summary,
+        color: color,
+        message: message,
         teamDomain: 'devops-wells',          // your Slack workspace
         tokenCredentialId: 'slack-cred'     // Jenkins credential ID
     )
