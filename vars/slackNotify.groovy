@@ -22,6 +22,6 @@ def call(String status) {
         color: color,
         message: message,
         teamDomain: 'devops-wells',          // your Slack workspace
-        tokenCredentialId: 'slack-cred'     // Jenkins credential ID
+        tokenCredentialId: 'slack-token'     // Jenkins credentiaslack-tokenl ID
     )
 }
